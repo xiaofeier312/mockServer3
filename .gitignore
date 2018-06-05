@@ -1,0 +1,8 @@
+/__pycache__/
+/app/__pycache__/
+/app/admin/__pycache__/
+/app/email.pyc
+/app/main/__pycache__/
+/migrations/
+/.idea/
+/tests/__pycache__/
