@@ -19,7 +19,7 @@ def create_app(config_name):
     app_admin.init_app(app)
     bootstrap.init_app(app)
     # set flask admin swatch
-    app.config['FLASK_ADMIN_SWATCH'] = 'cosmo'
+    # app.config['FLASK_ADMIN_SWATCH'] = 'cosmo'
 
 
     from .main import main as main_blueprint

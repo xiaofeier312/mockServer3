@@ -9,6 +9,8 @@ from contextlib import closing
 from config import objectServer
 import re
 from flask_admin.contrib.sqla import ModelView
+from wtforms import TextAreaField
+
 
 @main.before_app_request
 def before_all_request():
@@ -39,6 +41,32 @@ def before_all_request():
     elif MockItemServices.isExisted(origin_path):
         mock_object = MockItemServices.get_json(MockItemServices.isExisted(origin_path))
 
+        # json_resp = jsonify(mock_object.mock_json)
+        # rsp = make_response(json_resp)
+        rsp = make_response(mock_object.mock_json)
+
+        print('----> Get mock: json_resp> {}'.format(mock_object.mock_json))
+        return rsp
+    elif MockItemServices.isExisted('/' + origin_path):
+        mock_object = MockItemServices.get_json(MockItemServices.isExisted('/' + origin_path))
+
+        # json_resp = jsonify(mock_object.mock_json)
+        # rsp = make_response(json_resp)
+        rsp = make_response(mock_object.mock_json)
+
+        print('----> Get mock: json_resp> {}'.format(mock_object.mock_json))
+        return rsp
+    elif MockItemServices.isExisted(origin_path + '/'):
+        mock_object = MockItemServices.get_json(MockItemServices.isExisted(origin_path + '/'))
+
+        # json_resp = jsonify(mock_object.mock_json)
+        # rsp = make_response(json_resp)
+        rsp = make_response(mock_object.mock_json)
+
+        print('----> Get mock: json_resp> {}'.format(mock_object.mock_json))
+        return rsp
+    elif MockItemServices.isExisted('/' + origin_path + '/'):
+        mock_object = MockItemServices.get_json(MockItemServices.isExisted('/' + origin_path + '/'))
 
         # json_resp = jsonify(mock_object.mock_json)
         # rsp = make_response(json_resp)
@@ -65,6 +93,7 @@ def before_all_request():
         print("-> Redirect request to object mac")
         return Response(r, status=r.status_code, headers=response_headers)
 
+
 # @main.route('/hi')
 # def hi_():
 #     return 'hi mock user~'
@@ -84,4 +113,20 @@ def before_all_request():
 class CustomModelView(ModelView):
     """View function of Flask-Admin for Models page."""
     page_size = 10
-    form_excluded_columns = ['create_time', 'op_time','modules']  # remove fields from the create and edit forms
+    can_view_details = True
+    # create_modal = True
+    # edit_modal = True
+    column_searchable_list = ['url', 'name']
+    form_excluded_columns = ['delay_time', 'delay_status', 'create_time', 'update_time', 'op_time', 'mock_id',
+                             'reserveParam1', 'reserveParam2']  # remove fields from the create and edit forms
+    column_exclude_list = ['delay_time', 'delay_status', 'create_time', 'op_time', 'mock_id', 'reserveParam1',
+                           'reserveParam2']
+
+    form_overrides = {
+        'mock_json': TextAreaField
+    }
+    form_widget_args = {
+        'mock_json': {
+            'style': 'height:350px'
+        }
+    }
