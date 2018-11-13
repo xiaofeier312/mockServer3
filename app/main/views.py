@@ -42,10 +42,23 @@ def before_all_request():
     elif origin_path.startswith('etl-web-service/order/selectStudentOrders'):
         body2 = request.get_data()
         dict_body = json.loads(body2)
-        tel = dict_body['tel']
+        serial_no = dict_body['serial_no']
 
         mockItem = MockItemServices()
-        result = mockItem.query_selectStudentOrders(tel)
+        result = mockItem.query_selectStudentOrders(serial_no)
+        print('----sql result: {}'.format(result))
+
+        rsp = make_response(json.dumps(result, ensure_ascii=False))
+        return rsp
+
+    elif origin_path.startswith('etl-web-service/order/queryOrderDetails'):
+        body2 = request.get_data()
+        dict_body = json.loads(body2)
+        serial_no = dict_body['serial_no']
+
+        mockItem = MockItemServices()
+
+        result = mockItem.query_queryOrderDetails(serial_no)
         print('----sql result: {}'.format(result))
 
         rsp = make_response(json.dumps(result, ensure_ascii=False))
