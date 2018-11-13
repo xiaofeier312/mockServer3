@@ -45,33 +45,33 @@ class Config(object):
         pass
 
 
-class MacConfig(Config):
-    # Mac mysql
-    TESTING = True
-    # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:adadad1@127.0.0.1:3306/mock?charset=utf8'
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://ent_all:ent@172.16.117.226:3306/ent_portal?charset=utf8'
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or 'mysql://root:adadad1@127.0.0.1:3306/mock'
-    SQLALCHEMY_BINDS = {
-        # 'mock_data': 'mysql+pymysql://root:adadad1@127.0.0.1:3306/mock?charset=utf8',
-        'mysql_117.226': 'mysql+pymysql://ent_all:ent@172.16.117.226:3306/ent_portal?charset=utf8'
-    }
+# class MacConfig(Config):
+#     # Mac mysql
+#     TESTING = True
+#     # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:adadad1@127.0.0.1:3306/mock?charset=utf8'
+#     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://ent_all:ent@172.16.117.226:3306/ent_portal?charset=utf8'
+#     # SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or 'mysql://root:adadad1@127.0.0.1:3306/mock'
+#     SQLALCHEMY_BINDS = {
+#         # 'mock_data': 'mysql+pymysql://root:adadad1@127.0.0.1:3306/mock?charset=utf8',
+#         'mysql_117.226': 'mysql+pymysql://ent_all:ent@172.16.117.226:3306/ent_portal?charset=utf8'
+#     }
 
 
 class TestingConfig(Config):
     DEBUG = True
-    # old config:
+    # old configs:
     # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1/tushare?charset=utf8'
     # mac mysql
     # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:adadad1@localhost/sdauto?charset=utf8'
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://alimysql:alimysql7933@47.98.133.163/mock?charset=utf8'
     SQLALCHEMY_BINDS = {
         # 'mock_data': 'mysql+pymysql://root:adadad1@127.0.0.1:3306/mock?charset=utf8',
-        # 'mysql_117.226': 'mysql+pymysql://ent_all:ent@172.16.117.226:3306/ent_portal?charset=utf8'
+        'mysql_117.226': 'mysql+pymysql://ent_all:ent@172.16.117.226:3306/ent_portal?charset=utf8'
     }
     SQLALCHEMY_ECHO = True  # set sql echo = true
 
 
 configs = {
-    'mac': MacConfig,
+    # 'mac': MacConfig,
     'default': TestingConfig
 }
