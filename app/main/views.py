@@ -42,10 +42,10 @@ def before_all_request():
     elif origin_path.startswith('etl-web-service/order/selectStudentOrders'):
         body2 = request.get_data()
         dict_body = json.loads(body2)
-        serial_no = dict_body['serial_no']
+        tel = dict_body['tel']
 
         mockItem = MockItemServices()
-        result = mockItem.query_selectStudentOrders(serial_no)
+        result = mockItem.query_selectStudentOrders(tel)
         print('----sql result: {}'.format(result))
 
         rsp = make_response(json.dumps(result, ensure_ascii=False))
