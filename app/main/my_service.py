@@ -188,7 +188,7 @@ class MockItemServices(object):
                 "teacher_head_em": i.eppusername,
                 "third_proj_name": i.packname,
                 "training_amount": str(i.training_amount.quantize(Decimal('0.00'))),
-                "username": "李超",
+                "username": i.username,
                 "weixin_id": "18334514213"
             }
             all_result_list.append(rs_dict)
