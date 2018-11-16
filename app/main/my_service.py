@@ -113,11 +113,11 @@ class MockItemServices(object):
         Left join ent_p_cp epp on epp.id = ecnp.person_id
         #left join ent_p_co epp2 on 
         #LEFT JOIN ent_ord_exam_plan 
-        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0
+        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0 and ecp.delete_flag=0
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
-        and ecp.person_id =epp.id
-        and od.serial_no =""" + '\'' + serial_no + '\''
+        #and ecp.person_id =epp.id
+        and od.serial_no =""" + '\'' + serial_no + '_1\'' + """group by  od.serial_no;"""
 
         sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
         from ent_ord_details od
@@ -130,9 +130,9 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         and epp.position in ('CP_LEADER','CP_DEAN')
-        and od.serial_no = """ + '\'' + serial_no + '\'' + " group by position"
+        and od.serial_no = """ + '\'' + serial_no + '_1\'' + " group by position"
 
-        # print('----sql is : {}'.format(sql))
+        print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
         r2 = self.ses.execute(sql2)
 
