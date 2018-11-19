@@ -62,15 +62,19 @@ def before_all_request():
         try:
             if 'serial_no_eq' in dict_body:
                 serial_no = dict_body['serial_no_eq']
+                logger.info('----Get serial_no : {}'.format(serial_no))
                 result = mockItem.query_queryOrderDetails(serial_no)
             elif 'mobile_eq' in dict_body:
                 mobile = dict_body['mobile_eq']
+                logger.info('----Get mobile : {}'.format(mobile))
                 result = mockItem.query_queryOrderDetails_by_mobile(mobile)
             elif 'stu_id' in dict_body:
                 stu_id = dict_body['stu_id_eq']
+                logger.info('----Get stu_id : {}'.format(stu_id))
                 result = mockItem.query_queryOrderDetails_by_stu_id(stu_id)
             elif 'stu_id_in' in dict_body:
                 stu_id_in = dict_body['stu_id_in']
+                logger.info('----Get stu_id_in : {}'.format(stu_id_in))
                 logger.info('----Get stu_id_in: {}'.format(stu_id_in))
                 result = mockItem.query_queryOrderDetails_by_stu_id_in(stu_id_in)
             else:

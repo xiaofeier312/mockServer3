@@ -347,6 +347,7 @@ class MockItemServices(object):
         sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
         from ent_ord_details od
         LEFT JOIN ent_order o on o.id=od.ord_id
+        LEFT JOIN t_user_info t on t.id=o.stu_id
         left join ent_ord_detail_camp odc on odc.ord_detail_id=od.id
         LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = odc.family_id
         Left join ent_p_cp epp on epp.id = ecp.person_id        
