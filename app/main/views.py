@@ -28,9 +28,9 @@ def before_all_request():
     method = request.method
     data = request.data or request.form or None
     headers = dict()
-    logger.info(url)
-    logger.info(method)
-    logger.info(data)
+    logger.info('-> url: {}'.format(url))
+    logger.info('-> method: {}'.format(method))
+    logger.info('-> data: {}'.format(data))
     print('-> url: {}'.format(url))
     print('-> method: {}'.format(method))
     print('-> data: {}'.format(data))
@@ -57,11 +57,28 @@ def before_all_request():
     elif origin_path.startswith('etl-web-service/order/queryOrderDetails'):
         body2 = request.get_data()
         dict_body = json.loads(body2)
-        serial_no = dict_body['serial_no_eq']
-
         mockItem = MockItemServices()
 
-        result = mockItem.query_queryOrderDetails(serial_no)
+        try:
+            if 'serial_no_eq' in dict_body:
+                serial_no = dict_body['serial_no_eq']
+                result = mockItem.query_queryOrderDetails(serial_no)
+            elif 'mobile_eq' in dict_body:
+                mobile = dict_body['mobile_eq']
+                result = mockItem.query_queryOrderDetails_by_mobile(mobile)
+            elif 'stu_id' in dict_body:
+                stu_id = dict_body['stu_id_eq']
+                result = mockItem.query_queryOrderDetails_by_stu_id(stu_id)
+            elif 'stu_id_in' in dict_body:
+                stu_id_in = dict_body['stu_id_in']
+                logger.info('----Get stu_id_in: {}'.format(stu_id_in))
+                result = mockItem.query_queryOrderDetails_by_stu_id_in(stu_id_in)
+            else:
+                result = "----Not support parmeter, please cantact QA!"
+
+        except Exception as ke:
+            logger.error(ke)
+
         print('----sql result: {}'.format(result))
 
         rsp = make_response(json.dumps(result, ensure_ascii=False))
