@@ -57,7 +57,7 @@ def before_all_request():
     elif origin_path.startswith('etl-web-service/order/queryOrderDetails'):
         body2 = request.get_data()
         dict_body = json.loads(body2)
-        serial_no = dict_body['serial_no']
+        serial_no = dict_body['serial_no_eq']
 
         mockItem = MockItemServices()
 
