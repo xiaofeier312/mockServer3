@@ -68,8 +68,8 @@ def before_all_request():
                 mobile = dict_body['mobile_eq']
                 logger.info('----Get mobile : {}'.format(mobile))
                 result = mockItem.query_queryOrderDetails_by_mobile(mobile)
-            elif 'stu_id' in dict_body:
-                stu_id = dict_body['stu_id_eq']
+            elif 'stu_id_eq' in dict_body:
+                stu_id = dict_body['stu_id_eq'] #stu_id_eq
                 logger.info('----Get stu_id : {}'.format(stu_id))
                 result = mockItem.query_queryOrderDetails_by_stu_id(stu_id)
             elif 'stu_id_in' in dict_body:
