@@ -456,7 +456,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         #and ecp.person_id =epp.id
-        and t.id in """ + '\'' + stu_id_in + '\'' + """group by  od.serial_no;"""
+        and t.id in """ + '(' + stu_id_in + ')' + """group by  od.serial_no;"""
 
         sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
         from ent_ord_details od
@@ -469,7 +469,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         and epp.position in ('CP_LEADER','CP_DEAN')
-        and t.id in """ + '\'' + stu_id_in + '\'' + """group by  position;"""
+        and t.id in """ + '(' + stu_id_in + ')' + """group by  position;"""
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
