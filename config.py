@@ -1,7 +1,15 @@
 import os
+import logging
+import logging.config
 
 
-# basedir = os.path.abspath(os.path.dirname(__file__))
+config = {    "key1":"value1"     }
+
+logging.config.fileConfig("logger.conf")
+logger = logging.getLogger("cse")
+
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 #
 # class Config:
 #     SECRET_KEY = os.environ.get('SECRECT_KEY') or 'hard to guess string'
@@ -30,6 +38,7 @@ import os
 
 
 
+
 class objectServer(object):
     '''All requests into this app'URL will be reidirected to the server IP'''
     object_server_IP = 'http://172.16.116.136:7086'
@@ -40,9 +49,11 @@ class Config(object):
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
+
     @staticmethod
     def init_app(app):
         pass
+
 
 
 # class MacConfig(Config):

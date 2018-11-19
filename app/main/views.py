@@ -11,7 +11,7 @@ import re
 from flask_admin.contrib.sqla import ModelView
 from wtforms import TextAreaField
 import json
-
+from config import logger
 
 @main.before_app_request
 def before_all_request():
@@ -28,6 +28,9 @@ def before_all_request():
     method = request.method
     data = request.data or request.form or None
     headers = dict()
+    logger.info(url)
+    logger.info(method)
+    logger.info(data)
     print('-> url: {}'.format(url))
     print('-> method: {}'.format(method))
     print('-> data: {}'.format(data))

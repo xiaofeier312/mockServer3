@@ -1,0 +1,6 @@
+[Mon, 19 Nov 2018 11:29:31][views.py][line:31][INFO] http://127.0.0.1:5000/etl-web-service/order/queryOrderDetails
+[Mon, 19 Nov 2018 11:29:31][views.py][line:32][INFO] POST
+[Mon, 19 Nov 2018 11:29:31][views.py][line:33][INFO] b'{"userId":1602810,"serial_no":"FX20181112000007"}'
+[Mon, 19 Nov 2018 11:29:31][views.py][line:31][INFO] http://127.0.0.1:5000/etl-web-service/order/selectStudentOrders 
+[Mon, 19 Nov 2018 11:29:31][views.py][line:32][INFO] POST
+[Mon, 19 Nov 2018 11:29:31][views.py][line:33][INFO] b'{"userId":1602810,"tel":"15652226785"}'
