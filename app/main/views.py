@@ -46,6 +46,9 @@ def before_all_request():
         body2 = request.get_data()
         body3 = request.values
 
+        print('----selectStudentOrders-Get body2: {}'.format(body2))
+        logger.info('----selectStudentOrders-Get body2: {}'.format(body2))
+
         dict_body = json.loads(body2)
         tel = dict_body['tel']
 
@@ -58,6 +61,8 @@ def before_all_request():
 
     elif origin_path.startswith('etl-web-service/order/queryOrderDetails'):
         body2 = request.get_data()
+        print('----queryOrderDetails-Get body2: {}'.format(body2))
+        logger.info('----queryOrderDetails-Get body2: {}'.format(body2))
         dict_body = json.loads(body2)
         mockItem = MockItemServices()
 
