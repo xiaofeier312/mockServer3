@@ -137,6 +137,9 @@ class MockItemServices(object):
         r2 = self.ses.execute(sql2)
 
         t = r.fetchall()
+        if t == []:
+            return ''
+
         t2 = r2.fetchall()
 
         sql2_leader = ()

@@ -44,6 +44,8 @@ def before_all_request():
 
     elif origin_path.startswith('etl-web-service/order/selectStudentOrders'):
         body2 = request.get_data()
+        body3 = request.values
+
         dict_body = json.loads(body2)
         tel = dict_body['tel']
 
