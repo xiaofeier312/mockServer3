@@ -117,7 +117,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         #and ecp.person_id =epp.id
-        and od.serial_no =""" + '\'' + serial_no + '\'' + """group by  od.serial_no;"""
+        and od.serial_no =""" + '\'' + serial_no + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
         sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
         from ent_ord_details od
@@ -130,7 +130,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         and epp.position in ('CP_LEADER','CP_DEAN')
-        and od.serial_no = """ + '\'' + serial_no + '\'' + " group by position"
+        and od.serial_no = """ + '\'' + serial_no + '\'' + " and epp.delete_flag = 0 group by position"
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
@@ -232,7 +232,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         #and ecp.person_id =epp.id
-        and t.mobile =""" + '\'' + mobile + '\'' + """group by  od.serial_no;"""
+        and t.mobile =""" + '\'' + mobile + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
         sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
         from ent_ord_details od
@@ -246,7 +246,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         and epp.position in ('CP_LEADER','CP_DEAN')
-        and t.mobile =""" + '\'' + mobile + '\'' + """group by  position;"""
+        and t.mobile =""" + '\'' + mobile + '\'' + """ and epp.delete_flag = 0 group by  position;"""
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
@@ -345,7 +345,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         #and ecp.person_id =epp.id
-        and t.id =""" + '\'' + stu_id + '\'' + """group by  od.serial_no;"""
+        and t.id =""" + '\'' + stu_id + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
         sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
         from ent_ord_details od
@@ -359,7 +359,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         and epp.position in ('CP_LEADER','CP_DEAN')
-        and t.id =""" + '\'' + stu_id + '\'' + """group by  position;"""
+        and t.id =""" + '\'' + stu_id + '\'' + """ and epp.delete_flag = 0 group by  position;"""
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
@@ -459,7 +459,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         #and ecp.person_id =epp.id
-        and t.id in """ + '(' + stu_id_in + ')' + """group by  od.serial_no;"""
+        and t.id in """ + '(' + stu_id_in + ')' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
         sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
         from ent_ord_details od
@@ -473,7 +473,7 @@ class MockItemServices(object):
         and od.status_code in("PAID","FREEZED") 
         and od.biz_date >"2016-10-01" 
         and epp.position in ('CP_LEADER','CP_DEAN')
-        and t.id in """ + '(' + stu_id_in + ')' + """group by  position;"""
+        and t.id in """ + '(' + stu_id_in + ')' + """ and epp.delete_flag = 0 group by  position;"""
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
