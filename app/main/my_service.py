@@ -10,6 +10,69 @@ class MockItemServices(object):
         self.DBSession = sessionmaker(bind=self.eng)
         self.ses = self.DBSession()
 
+    query_order_sql = """SELECT od.id as "ord_did",od.biz_date "biedatatime",t.cert_no"t_cert_no",
+        cn.name"codeName",odc.code_name_id"codeNameId",
+        f.college_id"cliegaidbycamp", cp.college_id"collegeidbypackage",
+        c.name"collegenamebycamp", c1.name"collegenamebypackage",
+        o.serial_no"o-serial_no", od.biz_date "od-biz_date", od.`serial_no` as "orderdetailsID", 
+        pack.name as "packname",od.status_code as "odstatus",t.username,f.id as "familyId",t.mobile, epp.position as "eppposition",    
+        f.name as "familyname",epp.name as "eppname",epp.username as "eppusername",
+        f.id,p1.name as "p1name",o.payment_date,p2.name as "p2name",od.serial_no,t.id as "stuID",
+        od.`status_code` as "odstatus",c.name as"cname",cn.name, od.training_amount
+        from ent_ord_details od 
+        LEFT JOIN ent_order o on o.id=od.ord_id
+        LEFT JOIN t_user_info t on t.id=o.stu_id
+        LEFT JOIN ent_package pack on pack.id=od.package_id
+        LEFT JOIN ent_college_projs cp on cp.id=pack.college_proj_id
+        LEFT JOIN ent_proj_1st p1 on p1.id=cp.proj_1st_id
+        LEFT JOIN ent_proj_2nd p2 on p2.id=cp.proj_2nd_id
+        LEFT JOIN ent_ord_detail_camp odc ON odc.ord_detail_id=od.id
+        LEFT JOIN ent_code_name cn on cn.id =odc.code_name_id
+        LEFT JOIN ent_family f ON f.id = odc.family_id
+        left join ent_code_name_person_rel ecnp on ecnp.code_name_id = cn.id     
+        LEFT JOIN ent_college c ON  c.id=f.college_id   #老师的
+        LEFT JOIN ent_college c1 ON c1.id=cp.college_id  #产品包
+        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = f.id #and ecp.college_id = f.college_id
+        Left join ent_p_cp epp on epp.id = ecnp.person_id
+        #left join ent_p_co epp2 on 
+        #LEFT JOIN ent_ord_exam_plan 
+        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0 and ecp.delete_flag=0
+        and od.status_code in("PAID","FREEZED") 
+        and od.biz_date >"2016-10-01" 
+        #and ecp.person_id =epp.id
+        """
+
+    quer_order_sql_2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
+        from ent_ord_details od
+        LEFT JOIN ent_order o on o.id=od.ord_id
+        left join ent_ord_detail_camp odc on odc.ord_detail_id=od.id
+        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = odc.family_id
+        Left join ent_p_cp epp on epp.id = ecp.person_id        
+        LEFT JOIN ent_college c ON  c.id=ecp.college_id   
+        WHERE od.delete_flag=0 
+        and od.status_code in("PAID","FREEZED") 
+        and od.biz_date >"2016-10-01" 
+        and epp.position in ('CP_LEADER','CP_DEAN')"""
+
+    query_stu_ord  = """SELECT   od.`serial_no` as "orderdetailsID",p1.name "p1name",p2.name "p2name",pack.name as "typepackname",
+        od.biz_date "biedatatime",od.`status_code` as "odstatus",t.username as "tusername"
+        from ent_ord_details od 
+        LEFT JOIN ent_order o on o.id=od.ord_id
+        LEFT JOIN t_user_info t on t.id=o.stu_id
+        LEFT JOIN ent_package pack on pack.id=od.package_id
+        LEFT JOIN ent_college_projs cp on cp.id=pack.college_proj_id
+        LEFT JOIN ent_proj_1st p1 on p1.id=cp.proj_1st_id
+        LEFT JOIN ent_proj_2nd p2 on p2.id=cp.proj_2nd_id
+        LEFT JOIN ent_ord_detail_camp odc ON odc.ord_detail_id=od.id
+        LEFT JOIN ent_code_name cn on cn.id =odc.code_name_id
+        LEFT JOIN ent_family f ON f.family_no = odc.family_id
+        LEFT JOIN ent_college c ON  c.id=f.college_id
+        LEFT JOIN ent_college c1 ON c1.id=cp.college_id
+        #LEFT JOIN ent_ord_exam_plan 
+        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0
+        and od.status_code in("PAID","FREEZED") 
+        and od.biz_date >"2016-10-01" """
+
     @staticmethod
     def get_json_list():
         """get all avliable json items"""
@@ -49,27 +112,9 @@ class MockItemServices(object):
 
     def query_selectStudentOrders(self, tel):
 
-        sql = """SELECT   od.`serial_no` as "orderdetailsID",p1.name "p1name",p2.name "p2name",pack.name as "typepackname",
-        od.biz_date "biedatatime",od.`status_code` as "odstatus",t.username as "tusername"
-        from ent_ord_details od 
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        LEFT JOIN t_user_info t on t.id=o.stu_id
-        LEFT JOIN ent_package pack on pack.id=od.package_id
-        LEFT JOIN ent_college_projs cp on cp.id=pack.college_proj_id
-        LEFT JOIN ent_proj_1st p1 on p1.id=cp.proj_1st_id
-        LEFT JOIN ent_proj_2nd p2 on p2.id=cp.proj_2nd_id
-        LEFT JOIN ent_ord_detail_camp odc ON odc.ord_detail_id=od.id
-        LEFT JOIN ent_code_name cn on cn.id =odc.code_name_id
-        LEFT JOIN ent_family f ON f.family_no = odc.family_id
-        LEFT JOIN ent_college c ON  c.id=f.college_id
-        LEFT JOIN ent_college c1 ON c1.id=cp.college_id
-        #LEFT JOIN ent_ord_exam_plan 
-        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        and t.mobile = """ + '\'' + tel + '\''
+        sql = MockItemServices.query_stu_ord + """ and t.mobile = """ + '\'' + tel + '\''
 
-        # print('----sql is : {}'.format(sql))
+        print('----query_selectStudentOrders sql is : {}'.format(sql))
         r = self.ses.execute(sql)
         t = r.fetchall()
         all_result_list = []
@@ -87,50 +132,9 @@ class MockItemServices(object):
     def query_queryOrderDetails(self, serial_no):
 
         # This is not contain cp_leader, cp_dean
-        sql = """SELECT od.id as "ord_did",od.biz_date "biedatatime",t.cert_no"t_cert_no",
-        cn.name"codeName",odc.code_name_id"codeNameId",
-        f.college_id"cliegaidbycamp", cp.college_id"collegeidbypackage",
-        c.name"collegenamebycamp", c1.name"collegenamebypackage",
-        o.serial_no"o-serial_no", od.biz_date "od-biz_date", od.`serial_no` as "orderdetailsID", 
-        pack.name as "packname",od.status_code as "odstatus",t.username,f.id as "familyId",t.mobile, epp.position as "eppposition",    
-        f.name as "familyname",epp.name as "eppname",epp.username as "eppusername",
-        f.id,p1.name as "p1name",o.payment_date,p2.name as "p2name",od.serial_no,t.id as "stuID",
-        od.`status_code` as "odstatus",c.name as"cname",cn.name, od.training_amount
-        from ent_ord_details od 
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        LEFT JOIN t_user_info t on t.id=o.stu_id
-        LEFT JOIN ent_package pack on pack.id=od.package_id
-        LEFT JOIN ent_college_projs cp on cp.id=pack.college_proj_id
-        LEFT JOIN ent_proj_1st p1 on p1.id=cp.proj_1st_id
-        LEFT JOIN ent_proj_2nd p2 on p2.id=cp.proj_2nd_id
-        LEFT JOIN ent_ord_detail_camp odc ON odc.ord_detail_id=od.id
-        LEFT JOIN ent_code_name cn on cn.id =odc.code_name_id
-        LEFT JOIN ent_family f ON f.id = odc.family_id
-        left join ent_code_name_person_rel ecnp on ecnp.code_name_id = cn.id     
-        LEFT JOIN ent_college c ON  c.id=f.college_id   #老师的
-        LEFT JOIN ent_college c1 ON c1.id=cp.college_id  #产品包
-        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = f.id #and ecp.college_id = f.college_id
-        Left join ent_p_cp epp on epp.id = ecnp.person_id
-        #left join ent_p_co epp2 on 
-        #LEFT JOIN ent_ord_exam_plan 
-        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0 and ecp.delete_flag=0
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        #and ecp.person_id =epp.id
-        and od.serial_no =""" + '\'' + serial_no + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
+        sql = MockItemServices.query_order_sql + """ and od.serial_no =""" + '\'' + serial_no + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
-        sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
-        from ent_ord_details od
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        left join ent_ord_detail_camp odc on odc.ord_detail_id=od.id
-        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = odc.family_id
-        Left join ent_p_cp epp on epp.id = ecp.person_id        
-        LEFT JOIN ent_college c ON  c.id=ecp.college_id   
-        WHERE od.delete_flag=0 
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        and epp.position in ('CP_LEADER','CP_DEAN')
-        and od.serial_no = """ + '\'' + serial_no + '\'' + " and epp.delete_flag = 0 group by position"
+        sql2 = MockItemServices.quer_order_sql_2 + """ and od.serial_no = """ + '\'' + serial_no + '\'' + " and epp.delete_flag = 0 group by position"
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
@@ -196,57 +200,15 @@ class MockItemServices(object):
             }
             all_result_list.append(rs_dict)
 
-        all_result_final = {"code":"SUCCESS", "data": all_result_list, "message":""}
+        all_result_final = {"code": "SUCCESS", "data": all_result_list, "message": ""}
         return all_result_final
 
     def query_queryOrderDetails_by_mobile(self, mobile):
 
         # This is not contain cp_leader, cp_dean
-        sql = """SELECT od.id as "ord_did",od.biz_date "biedatatime",t.cert_no"t_cert_no",
-        cn.name"codeName",odc.code_name_id"codeNameId",
-        f.college_id"cliegaidbycamp", cp.college_id"collegeidbypackage",
-        c.name"collegenamebycamp", c1.name"collegenamebypackage",
-        o.serial_no"o-serial_no", od.biz_date "od-biz_date", od.`serial_no` as "orderdetailsID", 
-        pack.name as "packname",od.status_code as "odstatus",t.username,f.id as "familyId",t.mobile, epp.position as "eppposition",    
-        f.name as "familyname",epp.name as "eppname",epp.username as "eppusername",
-        f.id,p1.name as "p1name",o.payment_date,p2.name as "p2name",od.serial_no,t.id as "stuID",
-        od.`status_code` as "odstatus",c.name as"cname",cn.name, od.training_amount
-        from ent_ord_details od 
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        LEFT JOIN t_user_info t on t.id=o.stu_id
-        LEFT JOIN ent_package pack on pack.id=od.package_id
-        LEFT JOIN ent_college_projs cp on cp.id=pack.college_proj_id
-        LEFT JOIN ent_proj_1st p1 on p1.id=cp.proj_1st_id
-        LEFT JOIN ent_proj_2nd p2 on p2.id=cp.proj_2nd_id
-        LEFT JOIN ent_ord_detail_camp odc ON odc.ord_detail_id=od.id
-        LEFT JOIN ent_code_name cn on cn.id =odc.code_name_id
-        LEFT JOIN ent_family f ON f.id = odc.family_id
-        left join ent_code_name_person_rel ecnp on ecnp.code_name_id = cn.id     
-        LEFT JOIN ent_college c ON  c.id=f.college_id   #老师的
-        LEFT JOIN ent_college c1 ON c1.id=cp.college_id  #产品包
-        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = f.id #and ecp.college_id = f.college_id
-        Left join ent_p_cp epp on epp.id = ecnp.person_id
-        #left join ent_p_co epp2 on 
-        #LEFT JOIN ent_ord_exam_plan 
-        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0 and ecp.delete_flag=0
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        #and ecp.person_id =epp.id
-        and t.mobile =""" + '\'' + mobile + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
+        sql = MockItemServices.query_order_sql + """ and t.mobile =""" + '\'' + mobile + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
-        sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
-        from ent_ord_details od
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        LEFT JOIN t_user_info t on t.id=o.stu_id
-        left join ent_ord_detail_camp odc on odc.ord_detail_id=od.id
-        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = odc.family_id
-        Left join ent_p_cp epp on epp.id = ecp.person_id        
-        LEFT JOIN ent_college c ON  c.id=ecp.college_id   
-        WHERE od.delete_flag=0 
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        and epp.position in ('CP_LEADER','CP_DEAN')
-        and t.mobile =""" + '\'' + mobile + '\'' + """ and epp.delete_flag = 0 group by  position;"""
+        sql2 = MockItemServices.quer_order_sql_2 + """ and t.mobile =""" + '\'' + mobile + '\'' + """ and epp.delete_flag = 0 group by  position;"""
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
@@ -309,57 +271,15 @@ class MockItemServices(object):
             }
             all_result_list.append(rs_dict)
 
-        all_result_final = {"code":"SUCCESS", "data": all_result_list, "message":""}
+        all_result_final = {"code": "SUCCESS", "data": all_result_list, "message": ""}
         return all_result_final
 
     def query_queryOrderDetails_by_stu_id(self, stu_id):
 
         # This is not contain cp_leader, cp_dean
-        sql = """SELECT od.id as "ord_did",od.biz_date "biedatatime",t.cert_no"t_cert_no",
-        cn.name"codeName",odc.code_name_id"codeNameId",
-        f.college_id"cliegaidbycamp", cp.college_id"collegeidbypackage",
-        c.name"collegenamebycamp", c1.name"collegenamebypackage",
-        o.serial_no"o-serial_no", od.biz_date "od-biz_date", od.`serial_no` as "orderdetailsID", 
-        pack.name as "packname",od.status_code as "odstatus",t.username,f.id as "familyId",t.mobile, epp.position as "eppposition",    
-        f.name as "familyname",epp.name as "eppname",epp.username as "eppusername",
-        f.id,p1.name as "p1name",o.payment_date,p2.name as "p2name",od.serial_no,t.id as "stuID",
-        od.`status_code` as "odstatus",c.name as"cname",cn.name, od.training_amount
-        from ent_ord_details od 
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        LEFT JOIN t_user_info t on t.id=o.stu_id
-        LEFT JOIN ent_package pack on pack.id=od.package_id
-        LEFT JOIN ent_college_projs cp on cp.id=pack.college_proj_id
-        LEFT JOIN ent_proj_1st p1 on p1.id=cp.proj_1st_id
-        LEFT JOIN ent_proj_2nd p2 on p2.id=cp.proj_2nd_id
-        LEFT JOIN ent_ord_detail_camp odc ON odc.ord_detail_id=od.id
-        LEFT JOIN ent_code_name cn on cn.id =odc.code_name_id
-        LEFT JOIN ent_family f ON f.id = odc.family_id
-        left join ent_code_name_person_rel ecnp on ecnp.code_name_id = cn.id     
-        LEFT JOIN ent_college c ON  c.id=f.college_id   #老师的
-        LEFT JOIN ent_college c1 ON c1.id=cp.college_id  #产品包
-        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = f.id #and ecp.college_id = f.college_id
-        Left join ent_p_cp epp on epp.id = ecnp.person_id
-        #left join ent_p_co epp2 on 
-        #LEFT JOIN ent_ord_exam_plan 
-        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0 and ecp.delete_flag=0
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        #and ecp.person_id =epp.id
-        and t.id =""" + '\'' + stu_id + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
+        sql = MockItemServices.query_order_sql + """ and t.id =""" + '\'' + stu_id + '\'' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
-        sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
-        from ent_ord_details od
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        LEFT JOIN t_user_info t on t.id=o.stu_id
-        left join ent_ord_detail_camp odc on odc.ord_detail_id=od.id
-        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = odc.family_id
-        Left join ent_p_cp epp on epp.id = ecp.person_id        
-        LEFT JOIN ent_college c ON  c.id=ecp.college_id   
-        WHERE od.delete_flag=0 
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        and epp.position in ('CP_LEADER','CP_DEAN')
-        and t.id =""" + '\'' + stu_id + '\'' + """ and epp.delete_flag = 0 group by  position;"""
+        sql2 = MockItemServices.quer_order_sql_2 + """ and t.id =""" + '\'' + stu_id + '\'' + """ and epp.delete_flag = 0 group by  position;"""
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
@@ -422,58 +342,15 @@ class MockItemServices(object):
             }
             all_result_list.append(rs_dict)
 
-        all_result_final = {"code":"SUCCESS", "data": all_result_list, "message":""}
+        all_result_final = {"code": "SUCCESS", "data": all_result_list, "message": ""}
         return all_result_final
-
 
     def query_queryOrderDetails_by_stu_id_in(self, stu_id_in):
 
         # This is not contain cp_leader, cp_dean
-        sql = """SELECT od.id as "ord_did",od.biz_date "biedatatime",t.cert_no"t_cert_no",
-        cn.name"codeName",odc.code_name_id"codeNameId",
-        f.college_id"cliegaidbycamp", cp.college_id"collegeidbypackage",
-        c.name"collegenamebycamp", c1.name"collegenamebypackage",
-        o.serial_no"o-serial_no", od.biz_date "od-biz_date", od.`serial_no` as "orderdetailsID", 
-        pack.name as "packname",od.status_code as "odstatus",t.username,f.id as "familyId",t.mobile, epp.position as "eppposition",    
-        f.name as "familyname",epp.name as "eppname",epp.username as "eppusername",
-        f.id,p1.name as "p1name",o.payment_date,p2.name as "p2name",od.serial_no,t.id as "stuID",
-        od.`status_code` as "odstatus",c.name as"cname",cn.name, od.training_amount
-        from ent_ord_details od 
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        LEFT JOIN t_user_info t on t.id=o.stu_id
-        LEFT JOIN ent_package pack on pack.id=od.package_id
-        LEFT JOIN ent_college_projs cp on cp.id=pack.college_proj_id
-        LEFT JOIN ent_proj_1st p1 on p1.id=cp.proj_1st_id
-        LEFT JOIN ent_proj_2nd p2 on p2.id=cp.proj_2nd_id
-        LEFT JOIN ent_ord_detail_camp odc ON odc.ord_detail_id=od.id
-        LEFT JOIN ent_code_name cn on cn.id =odc.code_name_id
-        LEFT JOIN ent_family f ON f.id = odc.family_id
-        left join ent_code_name_person_rel ecnp on ecnp.code_name_id = cn.id     
-        LEFT JOIN ent_college c ON  c.id=f.college_id   #老师的
-        LEFT JOIN ent_college c1 ON c1.id=cp.college_id  #产品包
-        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = f.id #and ecp.college_id = f.college_id
-        Left join ent_p_cp epp on epp.id = ecnp.person_id
-        #left join ent_p_co epp2 on 
-        #LEFT JOIN ent_ord_exam_plan 
-        WHERE od.delete_flag=0 and o.delete_flag=0 and pack.delete_flag=0 and cp.delete_flag=0 and p1.delete_flag=0 and p2.delete_flag=0 and ecp.delete_flag=0
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        #and ecp.person_id =epp.id
-        and t.id in """ + '(' + stu_id_in + ')' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
+        sql = MockItemServices.query_order_sql + """ and t.id in """ + '(' + stu_id_in + ')' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
-        sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
-        from ent_ord_details od
-        LEFT JOIN ent_order o on o.id=od.ord_id
-        LEFT JOIN t_user_info t on t.id=o.stu_id
-        left join ent_ord_detail_camp odc on odc.ord_detail_id=od.id
-        LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = odc.family_id
-        Left join ent_p_cp epp on epp.id = ecp.person_id        
-        LEFT JOIN ent_college c ON  c.id=ecp.college_id   
-        WHERE od.delete_flag=0 
-        and od.status_code in("PAID","FREEZED") 
-        and od.biz_date >"2016-10-01" 
-        and epp.position in ('CP_LEADER','CP_DEAN')
-        and t.id in """ + '(' + stu_id_in + ')' + """ and epp.delete_flag = 0 group by  position;"""
+        sql2 = MockItemServices.quer_order_sql_2 + """ and t.id in """ + '(' + stu_id_in + ')' + """ and epp.delete_flag = 0 group by  position;"""
 
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
@@ -536,5 +413,5 @@ class MockItemServices(object):
             }
             all_result_list.append(rs_dict)
 
-        all_result_final = {"code":"SUCCESS", "data": all_result_list, "message":""}
+        all_result_final = {"code": "SUCCESS", "data": all_result_list, "message": ""}
         return all_result_final
