@@ -362,8 +362,20 @@ class MockItemServices(object):
         # This is not contain cp_leader, cp_dean
         sql = MockItemServices.query_order_sql + """ and t.id in """ + '(' + stu_id_in + ')' + """  and epp.delete_flag = 0 group by  od.serial_no;"""
 
-        sql2 = MockItemServices.quer_order_sql_2 + """ and t.id in """ + '(' + stu_id_in + ')' + """ and epp.delete_flag = 0 group by  position;"""
-
+        # sql2 = MockItemServices.quer_order_sql_2 + """ and t.id in """ + '(' + stu_id_in + ')' + """ and epp.delete_flag = 0 group by  position;"""
+        sql2 = """SELECT od.id as "ord_did",epp.name, epp.username,epp.position as position
+                from ent_ord_details od
+                LEFT JOIN ent_order o on o.id=od.ord_id
+                LEFT JOIN t_user_info t on t.id=o.stu_id
+                left join ent_ord_detail_camp odc on odc.ord_detail_id=od.id
+                LEFT JOIN ent_cp_person_rel ecp on ecp.family_id = odc.family_id
+                Left join ent_p_cp epp on epp.id = ecp.person_id        
+                LEFT JOIN ent_college c ON  c.id=ecp.college_id   
+                WHERE od.delete_flag=0 
+                and od.status_code in("PAID","FREEZED") 
+                and od.biz_date >"2016-10-01" 
+                and epp.position in ('CP_LEADER','CP_DEAN')
+                and t.id in """ + '(' + stu_id_in + ')' + """ and epp.delete_flag = 0 group by  position;"""
         print('----sql is : {}'.format(sql))
         r = self.ses.execute(sql)
         r2 = self.ses.execute(sql2)
