@@ -141,10 +141,12 @@ class MockItemServices(object):
         r2 = self.ses.execute(sql2)
 
         t = r.fetchall()
+        t2 = r2.fetchall()
+
         if t == []:
             return ''
-
-        t2 = r2.fetchall()
+        elif t2 == [] or t2 is None:
+            return self.deal_no_dean(t)
 
         sql2_leader = ()
         sql2_dean = ()
@@ -217,6 +219,11 @@ class MockItemServices(object):
         t = r.fetchall()
         t2 = r2.fetchall()
 
+        if t == []:
+            return ''
+        elif t2 == [] or t2 is None:
+            return self.deal_no_dean(t)
+
         sql2_leader = ()
         sql2_dean = ()
         # print('sql_leader: {}'.format(t2[1]))
@@ -287,6 +294,11 @@ class MockItemServices(object):
 
         t = r.fetchall()
         t2 = r2.fetchall()
+
+        if t == []:
+            return ''
+        elif t2 == [] or t2 is None:
+            return self.deal_no_dean(t)
 
         sql2_leader = ()
         sql2_dean = ()
@@ -359,6 +371,11 @@ class MockItemServices(object):
         t = r.fetchall()
         t2 = r2.fetchall()
 
+        if t == []:
+            return ''
+        elif t2 == [] or t2 is None:
+            return self.deal_no_dean(t)
+
         sql2_leader = ()
         sql2_dean = ()
         # print('sql_leader: {}'.format(t2[1]))
@@ -401,6 +418,51 @@ class MockItemServices(object):
                 "stu_id": i.stuID,
                 "teach_college_head": sql2_dean.name,
                 "teach_college_head_em": sql2_dean.username,
+                "teach_college_id": i.cliegaidbycamp,
+                "teach_college_name": i.collegenamebycamp,
+                "teacher_code_name": i.codeName,
+                "teacher_head": i.codeName,
+                "teacher_head_em": i.eppusername,
+                "third_proj_name": i.packname,
+                "training_amount": str(i.training_amount.quantize(Decimal('0.00'))),
+                "username": i.username,
+                "weixin_id": "18334514213"
+            }
+            all_result_list.append(rs_dict)
+
+        all_result_final = {"code": "SUCCESS", "data": all_result_list, "message": ""}
+        return all_result_final
+
+    def deal_no_dean(self,rs1):
+        t = rs1
+        all_result_list = []
+        print('----sql result is: {}'.format(t))
+
+        for i in t:
+            rs_dict = {
+                "ad": "今日头条",
+                "cert_no": i.t_cert_no,
+                "city_id": "4",
+                "city_name": "北京",
+                "class_adviser": "lidongbo01",
+                "email": "123@qq.com",
+                "family": i.familyname,
+                "family_head": '',
+                "family_head_em": '',
+                "family_id": i.familyId,
+                "first_proj_name": i.p1name,
+                "mobile": i.mobile,
+                "pay_method_name": "天猫",
+                "payment_time": i.biedatatime.strftime("%Y-%m-%d %H:%M:%S"),
+                "qq_code": "123456789",
+                "school_id": "1035",
+                "school_name": "宁波校",
+                "sec_proj_name": i.p2name,
+                "serial_no": i.serial_no,
+                "status_code": i.odstatus,
+                "stu_id": i.stuID,
+                "teach_college_head": '',
+                "teach_college_head_em": '',
                 "teach_college_id": i.cliegaidbycamp,
                 "teach_college_name": i.collegenamebycamp,
                 "teacher_code_name": i.codeName,

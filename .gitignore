@@ -6,3 +6,6 @@
 /migrations/
 /.idea/
 /tests/__pycache__/
+/log/
+*.log.*
+*.log
