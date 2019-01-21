@@ -115,7 +115,7 @@ class MockItemServices(object):
 
         sql = MockItemServices.query_stu_ord + """ and t.mobile = """ + '\'' + tel + '\''
 
-        print('----query_selectStudentOrders sql is : {}'.format(sql))
+        print('----^^^^^^^query_selectStudentOrders sql is : {}'.format(sql))
         r = self.ses.execute(sql)
         t = r.fetchall()
         all_result_list = []
@@ -302,7 +302,8 @@ class MockItemServices(object):
                         and od.biz_date >"2016-10-01" 
                         and epp.position in ('CP_LEADER','CP_DEAN')""" + """ and t.id =""" + '\'' + stu_id + '\'' + """ and epp.delete_flag = 0 group by  position;"""
 
-        print('----sql is : {}'.format(sql))
+        print('---^^^^-sql is : {}'.format(sql))
+        print('---^^^^-sql2 is : {}'.format(sql2))
         r = self.ses.execute(sql)
         r2 = self.ses.execute(sql2)
 
